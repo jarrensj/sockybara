@@ -9,19 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.77.0",
+    "connectkit": "^1.9.0",
+    "next": "15.4.0-canary.51",
+    "pino-pretty": "^13.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.0-canary.51"
+    "viem": "^2.30.1",
+    "wagmi": "^2.15.4"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.4.0-canary.51",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
