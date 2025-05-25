@@ -17,5 +17,16 @@ export const abi = [
       { internalType: 'string', name: 'rightEar', type: 'string' },
       { internalType: 'string', name: 'nose', type: 'string' }
     ],
+  },
+  {
+    name: 'ownerOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [
+      { internalType: 'uint256', name: 'tokenId', type: 'uint256' }
+    ],
+    outputs: [
+      { internalType: 'address', name: '', type: 'address' }
+    ],
   }
 ] as const;

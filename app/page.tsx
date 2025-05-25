@@ -1,3 +1,5 @@
+import ViewSockybara from './components/ViewSockybara';
+
 export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-4">
@@ -12,6 +14,7 @@ export default function Home() {
           0x9779b3ef48f0bd3bcbf89a6037268767196369e0
         </a>
       </div>
+      <ViewSockybara />
     </div>
   );
 }
