@@ -144,7 +144,7 @@ export default function ViewSockybara() {
       {traits && (
         <div className="space-y-6">
           <div className="flex flex-col items-center">
-            <div ref={svgRef} className="relative group">
+            <div ref={svgRef}>
               <SockybaraSVG
                 frontLeftSockColor={`#${traits[0]}`}
                 frontRightSockColor={`#${traits[1]}`}
@@ -158,21 +158,21 @@ export default function ViewSockybara() {
                 width={400}
                 height={400}
               />
-              <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={handleDownload}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Download PNG
-                </button>
-                <button
-                  onClick={handleCopy}
-                  disabled={isCopying}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-                >
-                  {isCopying ? 'Copied!' : 'Copy PNG'}
-                </button>
-              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              <button
+                onClick={handleCopy}
+                disabled={isCopying}
+                className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 disabled:opacity-50"
+              >
+                {isCopying ? 'Copied!' : 'Copy PNG'}
+              </button>
+              <button
+                onClick={handleDownload}
+                className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500"
+              >
+                Download PNG
+              </button>
             </div>
           </div>
 
