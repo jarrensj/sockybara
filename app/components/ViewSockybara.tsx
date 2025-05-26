@@ -61,6 +61,53 @@ export default function ViewSockybara() {
     });
   };
 
+  const handleShare = async () => {
+    if (!svgRef.current) return;
+    
+    const svgElement = svgRef.current.querySelector('svg');
+    if (!svgElement) return;
+
+    try {
+      const pngData = await convertSvgToPng(svgElement);
+      
+      // Check if native sharing is available (mobile devices)
+      if (navigator.share) {
+        const blob = await fetch(pngData).then(r => r.blob());
+        const file = new File([blob], `sockybara-${tokenId}.png`, { type: 'image/png' });
+        
+        try {
+          await navigator.share({
+            files: [file],
+            title: `Sockybara #${tokenId}`,
+            text: `Check out my Sockybara #${tokenId}!`
+          });
+        } catch (err) {
+          // If sharing fails, fall back to copy
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob
+            })
+          ]);
+          setIsCopying(true);
+          setTimeout(() => setIsCopying(false), 2000);
+        }
+      } else {
+        // Desktop fallback - copy to clipboard
+        const blob = await fetch(pngData).then(r => r.blob());
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': blob
+          })
+        ]);
+        setIsCopying(true);
+        setTimeout(() => setIsCopying(false), 2000);
+      }
+    } catch (error) {
+      console.error('Error sharing/copying image:', error);
+      setIsCopying(false);
+    }
+  };
+
   const handleDownload = async () => {
     if (!svgRef.current) return;
     
@@ -69,33 +116,34 @@ export default function ViewSockybara() {
 
     try {
       const pngData = await convertSvgToPng(svgElement);
-      const link = document.createElement('a');
-      link.download = `sockybara-${tokenId}.png`;
-      link.href = pngData;
-      link.click();
+      
+      // Check if native sharing is available (mobile devices)
+      if (navigator.share) {
+        const blob = await fetch(pngData).then(r => r.blob());
+        const file = new File([blob], `sockybara-${tokenId}.png`, { type: 'image/png' });
+        
+        try {
+          await navigator.share({
+            files: [file],
+            title: `Sockybara #${tokenId}`,
+            text: `Check out my Sockybara #${tokenId}!`
+          });
+        } catch (err) {
+          // If sharing fails, fall back to download
+          const link = document.createElement('a');
+          link.download = `sockybara-${tokenId}.png`;
+          link.href = pngData;
+          link.click();
+        }
+      } else {
+        // Desktop fallback - direct download
+        const link = document.createElement('a');
+        link.download = `sockybara-${tokenId}.png`;
+        link.href = pngData;
+        link.click();
+      }
     } catch (error) {
-      console.error('Error converting SVG to PNG:', error);
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!svgRef.current) return;
-    
-    const svgElement = svgRef.current.querySelector('svg');
-    if (!svgElement) return;
-
-    try {
-      setIsCopying(true);
-      const pngData = await convertSvgToPng(svgElement);
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          'image/png': await fetch(pngData).then(r => r.blob())
-        })
-      ]);
-      setTimeout(() => setIsCopying(false), 2000);
-    } catch (error) {
-      console.error('Error copying image:', error);
-      setIsCopying(false);
+      console.error('Error downloading image:', error);
     }
   };
 
@@ -160,19 +208,31 @@ export default function ViewSockybara() {
               />
             </div>
             <div className="flex justify-center gap-2 mt-4">
-              <button
-                onClick={handleCopy}
-                disabled={isCopying}
-                className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 disabled:opacity-50"
-              >
-                {isCopying ? 'Copied!' : 'Copy PNG'}
-              </button>
-              <button
-                onClick={handleDownload}
-                className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500"
-              >
-                Download PNG
-              </button>
+              {typeof navigator.share === 'function' ? (
+                <button
+                  onClick={handleShare}
+                  disabled={isCopying}
+                  className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 disabled:opacity-50"
+                >
+                  Share
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={handleShare}
+                    disabled={isCopying}
+                    className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 disabled:opacity-50"
+                  >
+                    {isCopying ? 'Copied!' : 'Copy PNG'}
+                  </button>
+                  <button
+                    onClick={handleDownload}
+                    className="px-3 py-1 bg-blue-400 text-white rounded hover:bg-blue-500"
+                  >
+                    Download PNG
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
