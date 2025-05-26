@@ -11,6 +11,7 @@ export default function ViewSockybara() {
   const [mounted, setMounted] = React.useState(false);
   const [tokenId, setTokenId] = React.useState('');
   const [isCopying, setIsCopying] = React.useState(false);
+  const [inputError, setInputError] = React.useState('');
   const svgRef = React.useRef<HTMLDivElement>(null);
 
   const { data: traits, isError, isLoading } = useReadContract({
@@ -19,7 +20,7 @@ export default function ViewSockybara() {
     functionName: 'getTraits',
     args: tokenId ? [BigInt(tokenId)] : undefined,
     query: {
-      enabled: !!tokenId,
+      enabled: tokenId !== '' && !inputError,
     },
   });
 
@@ -29,7 +30,7 @@ export default function ViewSockybara() {
     functionName: 'ownerOf',
     args: tokenId ? [BigInt(tokenId)] : undefined,
     query: {
-      enabled: !!tokenId,
+      enabled: tokenId !== '' && !inputError,
     },
   });
 
@@ -115,9 +116,21 @@ export default function ViewSockybara() {
           max="247"
           placeholder="Enter token ID to view traits"
           value={tokenId}
-          onChange={(e) => setTokenId(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setTokenId(value);
+            if (value === '') {
+              setInputError('');
+            } else {
+              const num = parseInt(value);
+              setInputError(num >= 0 && num <= 247 ? '' : 'Token ID must be between 0 and 247');
+            }
+          }}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {inputError && (
+          <p className="mt-1 text-sm text-red-600">{inputError}</p>
+        )}
       </div>
 
       {isLoading && tokenId && (
