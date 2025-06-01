@@ -19,6 +19,15 @@ export const abi = [
     ],
   },
   {
+    name: 'totalSupply',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [
+      { internalType: 'uint256', name: '', type: 'uint256' }
+    ],
+  },
+  {
     name: 'ownerOf',
     type: 'function',
     stateMutability: 'view',
