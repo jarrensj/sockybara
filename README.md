@@ -21,6 +21,21 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## API endpoints
 
+### GET /api/holders
+Returns information about Sockybara holders.
+
+Response:
+```ts
+{
+  "uniqueWallets": string[],      // Array of unique wallet addresses
+  "uniqueWalletCount": number,    // Total number of unique wallets
+  "holders": {                    // Array of all token holders
+    "tokenId": number,            // Token ID
+    "address": string             // Owner's wallet address
+  }[]
+}
+```
+
 ## Contributing
 
 We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for terms and guidelines on how to contribute to this project.
